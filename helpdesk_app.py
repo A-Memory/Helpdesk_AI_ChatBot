@@ -8,6 +8,7 @@ import lmstudio as lm
 
 # LM Studio Server setup
 IS_LM_RUNNING: bool = False
+
 try:
     lm.configure_default_client("memorylaptop.local:3333")
     model = lm.llm()
@@ -15,6 +16,8 @@ try:
     IS_LM_RUNNING = True
 except lm.LMStudioWebsocketError:
     pass
+
+# end of LM Studio Server Setup
 
 # Main Flet Loop and Setup
 def main(page: ft.Page):
