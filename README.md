@@ -1,8 +1,8 @@
-# 🚀 Helpdesk AI Chatbot via Flet and LM Studio
+# 🚀 Helpdesk AI Chatbot via Flet and LM Studio's Python SDK
 
 ## 📋 Description
 
-This project demonstrates how to combine Flet’s modern, user-friendly UI framework with LM Studio as the AI backend. It serves as a practical example of integrating a responsive frontend with a local language model-powered assistant.
+This project demonstrates how to combine Flet’s modern, user-friendly UI framework with LM Studio's Python SDK as the AI backend. It serves as a practical example of integrating a responsive frontend with a local language model-powered assistant.
 
 ---
 
