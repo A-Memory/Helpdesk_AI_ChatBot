@@ -5,16 +5,19 @@ import threading
 import time
 import flet as ft
 import lmstudio as lm
+import psutil as ps
 
 # LM Studio Server setup
 IS_LM_RUNNING: bool = False
+LM_SERVER_IP: str = ""
 
 try:
     # put LM Studio Server IP Address Here
-    lm.configure_default_client("IP_HERE")
+    lm.configure_default_client(LM_SERVER_IP)
     model = lm.llm()
     chat = lm.Chat("You're a helpful Helpdesk Assistant for Employee's of a Small Office Company for Basic Help")
     IS_LM_RUNNING = True
+    print(f"LM STUDIO IS RUNNING AT {LM_SERVER_IP}\n")
 except lm.LMStudioWebsocketError:
     pass
 
@@ -46,6 +49,44 @@ def main(page: ft.Page):
     # for dragging frameless window
     def frameless_drag(p):
         page.window.start_dragging()
+
+    # begins Listener Thread for if LM Studio is up and off
+    # via classic pinging method
+    def lm_listener():
+        global model, chat, IS_LM_RUNNING
+
+        # for getting just IP address, not port number
+        # since 'ping' can't use port numbers
+        FOR_PING: str = ""
+        for letter in LM_SERVER_IP:
+            FOR_PING += letter
+            if letter is ":":
+                # removes ':'
+                FOR_PING = FOR_PING[:-1]
+                break
+        print(FOR_PING)
+        print()
+
+        while True:
+            os.system("clear")
+            ping_server = subprocess.run([f"ping -c 1 {FOR_PING}"], shell=True, capture_output=True, text=True)
+            print(f"From command output = {ping_server.stdout}\n! END OF OUTPUT !")
+            print()
+
+            # if packets loss, show error message on screen
+            if any(t in ping_server.stdout for t in ["100% packet loss", "error"]) or any(t in ping_server.stderr for t in ["100% packet loss", "error"]):
+                print("LM STUDIO NOT RUNNING!")
+                IS_LM_RUNNING = False
+
+                # for cooldown
+                time.sleep(5)
+
+            # resets LM Studio context if listener detects a ping from the server
+            elif "0% packet loss" in ping_server.stdout and IS_LM_RUNNING is False:
+                model = lm.llm()
+                chat = lm.Chat(
+                    "You're a helpful Helpdesk Assistant for Employee's of a Small Office Company for Basic Help")
+                IS_LM_RUNNING = True
 
     # ai functions
     def model_response(p, user_response):
@@ -133,28 +174,8 @@ def main(page: ft.Page):
     threading.Thread(target=main_background_effect, args=(page, 0, 0, 4, 0.7), daemon=True).start()
     threading.Thread(target=main_background_effect, args=(page, 1, 2, 10, 0.4), daemon=True).start()
 
-    # begins Listener Thread for if LM Studio is up and off
-    def updown_lm():
-        global model, chat, IS_LM_RUNNING
-        while True:
-            os.system("clear")
-            ping_server = subprocess.run(["lms server status"], shell=True, capture_output=True, text=True)
-            print(ping_server.stderr)
-            time.sleep(2)
-            if "not" in ping_server.stderr:
-                print("not running no more!!!\n")
-                IS_LM_RUNNING = False
-                # check if up
-            if "is running" in ping_server.stderr and IS_LM_RUNNING is False:
-                try:
-                    lm.configure_default_client("memorylaptop.local:3333")
-                except lm.LMStudioClientError:
-                    pass
-                model = lm.llm()
-                chat = lm.Chat("You're a helpful Helpdesk Assistant for Employee's of a Small Office Company for Basic Help")
-                IS_LM_RUNNING = True
-
-    threading.Thread(target=updown_lm, daemon=True).start()
+    # starts server listener thread
+    threading.Thread(target=lm_listener, daemon=True).start()
 
     # for AI response display
     model_response_text = ft.TextField(

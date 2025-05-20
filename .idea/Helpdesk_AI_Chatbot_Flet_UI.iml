@@ -4,7 +4,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.13 virtualenv at ~/PycharmProjects/Helpdesk_AI_Chatbot_Flet_UI/.venv" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.13 (Helpdesk_AI_ChatBot)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
