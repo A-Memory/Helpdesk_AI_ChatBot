@@ -1,4 +1,4 @@
-# 🚀 AI Chatbot via Flet and LM Studio
+# 🚀 Helpdesk AI Chatbot via Flet and LM Studio
 
 ## 📋 Description
 
