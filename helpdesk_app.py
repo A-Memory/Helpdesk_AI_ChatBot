@@ -10,7 +10,8 @@ import lmstudio as lm
 IS_LM_RUNNING: bool = False
 
 try:
-    lm.configure_default_client("memorylaptop.local:3333")
+    # put LM Studio Server IP Address Here
+    lm.configure_default_client("IP_HERE")
     model = lm.llm()
     chat = lm.Chat("You're a helpful Helpdesk Assistant for Employee's of a Small Office Company for Basic Help")
     IS_LM_RUNNING = True
