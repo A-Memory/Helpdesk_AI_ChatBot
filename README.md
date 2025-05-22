@@ -31,37 +31,12 @@ poetry install
 
 ## ▶️ Running the Application
 
-**Option 1: Use Poetry to run directly (recommended):**
+**Simply run the 'run_app' executable:**
 ```bash
-poetry run python main.py
+./run_app
 ```
 
-**Option 2: Activate the environment manually (Windows/Linux/MacOS):**
-```bash
-poetry shell
-python main.py
-```
-
----
-
----
-
-## 📤 Building and Publishing
-
-To build or publish this app for your platform (e.g., Windows, Linux, macOS, iOS, Android, Web), follow the official guide here:
-
-👉 [Flet Build & Publish Docs](https://flet.dev/docs/publish/)
-
-> This will walk you through building standalone executables or deploying to the web.
-
----
-
-## 📚 Resources
-
-- [Flet Documentation](https://flet.dev/docs/)
-- [Poetry Documentation](https://python-poetry.org/docs/)
-
----
+**Note: if commands fail, putting 'python3 -m' before works also**
 
 ## 📜 License
 
