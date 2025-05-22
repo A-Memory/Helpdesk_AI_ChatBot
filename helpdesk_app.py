@@ -1,6 +1,4 @@
-import os
-import random
-import subprocess
+import socket
 import threading
 import time
 import flet as ft
@@ -8,25 +6,38 @@ import lmstudio as lm
 
 # LM Studio Server setup
 IS_LM_RUNNING: bool = False
+LM_SERVER_IP: str = "memorylaptop.local"
+LM_SERVER_PORT: str = "3333"
+IF_CHAT_RUNNING: bool = False
 
 try:
     # put LM Studio Server IP Address Here
-    lm.configure_default_client("IP_HERE")
+    lm.configure_default_client(LM_SERVER_IP + ":" + LM_SERVER_PORT)
+    # main model
     model = lm.llm()
+    # main chat context
     chat = lm.Chat("You're a helpful Helpdesk Assistant for Employee's of a Small Office Company for Basic Help")
     IS_LM_RUNNING = True
+    print(f"LM STUDIO IS RUNNING AT {LM_SERVER_IP}:{LM_SERVER_PORT}\n")
 except lm.LMStudioWebsocketError:
     pass
 
+
 # end of LM Studio Server Setup
 
+def m2(page: ft.Page):
+    page.add(ft.TextField(label="test"))
 # Main Flet Loop and Setup
 def main(page: ft.Page):
+    # important globals
+    global IS_LM_RUNNING
+
     # important Flet functions section
     def main_background_effect(p, location_gradient, start_index, end_index, speed):
         nonlocal page, dynamic_background_gradient
         print(". . . . running background effect . . . .\n")
-        c = ["#310055", "#3c0663", "#4a0a77", "#5a108f", "#6818a5", "#8b2fc9", "#ab51e3", "#bd68ee", "#d283ff", "#dc97ff"]
+        c = ["#310055", "#3c0663", "#4a0a77", "#5a108f", "#6818a5", "#8b2fc9", "#ab51e3", "#bd68ee", "#d283ff",
+             "#dc97ff"]
 
         # error checking
         if end_index > len(c):
@@ -47,11 +58,37 @@ def main(page: ft.Page):
     def frameless_drag(p):
         page.window.start_dragging()
 
+    # begins Listener Thread for if LM Studio is up and off
+    def lm_listener():
+        global model, chat, IS_LM_RUNNING
+        # counter to check timeout
+        timeout_check = 0
+        while True:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                # for cooldown
+                time.sleep(2)
+
+                # checks for connection
+                is_lm_up = s.connect_ex((LM_SERVER_IP, int(LM_SERVER_PORT)))
+                if is_lm_up == 0:
+                    print("LM Studio is running!!\n")
+                elif is_lm_up != 0:
+                    print(f"timeout check = {timeout_check}\n")
+                    timeout_check += 1
+                    if timeout_check > 2:
+                        print("LM Studio is down!\n")
+                        IS_LM_RUNNING = False
+                        return
+
     # ai functions
     def model_response(p, user_response):
         nonlocal model_response_text, user_input_textfield
-        global model, chat
+        global model, chat, IF_CHAT_RUNNING
 
+        # if another resposne thread is running, safely exit
+        if IF_CHAT_RUNNING:
+            print("can't chat twice!!!\n")
+            return
         # if model or chat isn't found
         if IS_LM_RUNNING is False:
             model_response_text.value = "LM Studio isn't running!\n1. Close App.\n2. Run LM Studio with Loaded Model.\n3. Re-open App."
@@ -62,6 +99,9 @@ def main(page: ft.Page):
         user_input_textfield.value = ""
         model_response_text.value = ""
 
+        # safely locks chat to prevent double response
+        IF_CHAT_RUNNING = True
+
         # displays (streams) response in real time
         for f in model.respond_stream(user_response):
             model_response_text.value += f.content
@@ -71,6 +111,7 @@ def main(page: ft.Page):
         chat.__dict__.clear()
         # resets Chat prompt
         chat = lm.Chat("You're a helpful Helpdesk Assistant for Employee's of a Small Office Company for Basic Help")
+        IF_CHAT_RUNNING = False
 
     # main window setup
     page.window.frameless = True
@@ -80,13 +121,13 @@ def main(page: ft.Page):
 
     # background setup
     dynamic_background_gradient = ft.LinearGradient(
-            begin=ft.alignment.top_left,
-            end=ft.alignment.bottom_right,
-            colors=[
-                "#5a108f",
-                "#8b2fc9"
-            ]
-        )
+        begin=ft.alignment.top_left,
+        end=ft.alignment.bottom_right,
+        colors=[
+            "#5a108f",
+            "#8b2fc9"
+        ]
+    )
     page.decoration = ft.BoxDecoration(
         gradient=dynamic_background_gradient
     )
@@ -94,29 +135,19 @@ def main(page: ft.Page):
 
     # Moin Window Bar
     page.appbar = ft.CupertinoAppBar(
-        # how to use app menu
-        leading=ft.Container(
-                    content=ft.Icon(
-                        name=ft.Icons.BOOK,
-                        tooltip="! ! ! ! IMPORTANT ! ! ! !\n"
-                                "⚠️ Please send only one message at a time.\n"
-                                "Multiple messages are placed in a queue, which can use extra resources "
-                                "and may lead to performance issues or unexpected crashes.\n"
-                    )
-                ),
         # menu option area
         trailing=ft.MenuBar(
             controls=[
-                    ft.Row([
-                        ft.Container(
-                            content=ft.Icon(name=ft.Icons.MINIMIZE, tooltip="Minimize Program"),
-                            on_click=lambda _: setattr(page.window, "minimized", True),
-                        ),
-                        ft.Container(
-                            content=ft.Icon(name=ft.Icons.CLOSE_SHARP, tooltip="Exit Program"),
-                            on_click=lambda _: page.window.close()
-                        )
-                    ],
+                ft.Row([
+                    ft.Container(
+                        content=ft.Icon(name=ft.Icons.MINIMIZE, tooltip="Minimize Program"),
+                        on_click=lambda _: setattr(page.window, "minimized", True),
+                    ),
+                    ft.Container(
+                        content=ft.Icon(name=ft.Icons.CLOSE_SHARP, tooltip="Exit Program"),
+                        on_click=lambda _: page.window.close()
+                    )
+                ],
                 ),
             ],
         ),
@@ -133,38 +164,22 @@ def main(page: ft.Page):
     threading.Thread(target=main_background_effect, args=(page, 0, 0, 4, 0.7), daemon=True).start()
     threading.Thread(target=main_background_effect, args=(page, 1, 2, 10, 0.4), daemon=True).start()
 
-    # begins Listener Thread for if LM Studio is up and off
-    def updown_lm():
-        global model, chat, IS_LM_RUNNING
-        while True:
-            os.system("clear")
-            ping_server = subprocess.run(["lms server status"], shell=True, capture_output=True, text=True)
-            print(ping_server.stderr)
-            time.sleep(2)
-            if "not" in ping_server.stderr:
-                print("not running no more!!!\n")
-                IS_LM_RUNNING = False
-                # check if up
-            if "is running" in ping_server.stderr and IS_LM_RUNNING is False:
-                try:
-                    lm.configure_default_client("memorylaptop.local:3333")
-                except lm.LMStudioClientError:
-                    pass
-                model = lm.llm()
-                chat = lm.Chat("You're a helpful Helpdesk Assistant for Employee's of a Small Office Company for Basic Help")
-                IS_LM_RUNNING = True
-
-    threading.Thread(target=updown_lm, daemon=True).start()
+    # starts server listener thread
+    threading.Thread(target=lm_listener, daemon=True).start()
 
     # for AI response display
     model_response_text = ft.TextField(
-                value=f"{". . . . waiting for response . . . .":>50}",
-            multiline=True,
-            text_align=ft.alignment.center,
-            scroll_padding=20,
-            read_only=True,
-            border_width=0
-            )
+        value=f"{". . . . waiting for response . . . .":>50}",
+        multiline=True,
+        text_align=ft.alignment.center,
+        scroll_padding=20,
+        read_only=True,
+        border_width=0
+    )
+
+    # if LM Studio Server isn't up at startup
+    if IS_LM_RUNNING is False:
+        model_response_text.value = "LM Studio isn't running!\n1. Close App.\n2. Run LM Studio with Loaded Model.\n3. Re-open App."
 
     # the response object filed (flutter)
     model_response_field = ft.Column(
@@ -189,16 +204,16 @@ def main(page: ft.Page):
 
     # for 'actual' user input
     user_input_textfield = ft.CupertinoTextField(
-                    placeholder_text="Ask Away!",
-                    bgcolor=ft.Colors.TRANSPARENT,
-                    border=ft.Border(
-                        ft.BorderSide(0, ft.Colors.TRANSPARENT),
-                        ft.BorderSide(0, ft.Colors.TRANSPARENT),
-                        ft.BorderSide(0, ft.Colors.TRANSPARENT),
-                        ft.BorderSide(0, ft.Colors.TRANSPARENT)
-                    ),
-                    multiline=True,
-                )
+        placeholder_text="Ask Away!",
+        bgcolor=ft.Colors.TRANSPARENT,
+        border=ft.Border(
+            ft.BorderSide(0, ft.Colors.TRANSPARENT),
+            ft.BorderSide(0, ft.Colors.TRANSPARENT),
+            ft.BorderSide(0, ft.Colors.TRANSPARENT),
+            ft.BorderSide(0, ft.Colors.TRANSPARENT)
+        ),
+        multiline=True,
+    )
 
     # this is the main user input object box
     # that holds the user input field
@@ -208,7 +223,7 @@ def main(page: ft.Page):
                 content=user_input_textfield,
                 width=page.width,
                 height=50,
-                #alignment=ft.alignment.bottom_center,
+                # alignment=ft.alignment.bottom_center,
                 expand=True,
             )
         ],
@@ -267,6 +282,7 @@ def main(page: ft.Page):
             )
         ])
     )
+
 
 # main program
 if __name__ == '__main__':
