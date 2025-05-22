@@ -36,8 +36,6 @@ poetry install
 ./run_app
 ```
 
-**Note: if commands fail, putting 'python3 -m' before works also**
-
 ## 📜 License
 
 This project is provided for **viewing and educational purposes only**.  
