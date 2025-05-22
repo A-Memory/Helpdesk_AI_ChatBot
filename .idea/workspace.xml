@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5557277b-f79a-4ad8-90e5-ac4b07ef4b7c" name="Changes" comment="change 'lm_listener' and fix 'model_response' double input that affects the chat context and overwrites the 'model_response_text' value on the screen.">
-      <change afterPath="$PROJECT_DIR$/run_app" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk_app.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk_app.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="unrelease" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -64,7 +62,7 @@
     "Python.t.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "unrelease",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "/home/memory/PycharmProjects/restaurant_menu_program",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
@@ -77,7 +75,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.helpdesk_app">
     <configuration name="helpdesk_app" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Helpdesk_AI_Chatbot_Flet_UI" />
       <option name="ENV_FILES" value="" />
@@ -124,6 +122,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.other_menu" />
+        <item itemvalue="Python.other_menu" />
         <item itemvalue="Python.other_menu" />
       </list>
     </recent_temporary>
