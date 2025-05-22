@@ -6,8 +6,8 @@ import lmstudio as lm
 
 # LM Studio Server setup
 IS_LM_RUNNING: bool = False
-LM_SERVER_IP: str = "memorylaptop.local"
-LM_SERVER_PORT: str = "3333"
+LM_SERVER_IP: str = "" # Server IP
+LM_SERVER_PORT: str = "" # Port
 IF_CHAT_RUNNING: bool = False
 
 try:
@@ -16,7 +16,7 @@ try:
     # main model
     model = lm.llm()
     # main chat context
-    chat = lm.Chat("You're a helpful Helpdesk Assistant for Employee's of a Small Office Company for Basic Help")
+    chat = lm.Chat("You're a helpful Helpdesk IT Assistant.")
     IS_LM_RUNNING = True
     print(f"LM STUDIO IS RUNNING AT {LM_SERVER_IP}:{LM_SERVER_PORT}\n")
 except lm.LMStudioWebsocketError:
