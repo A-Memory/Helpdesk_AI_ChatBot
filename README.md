@@ -22,7 +22,7 @@ Clone the repository and install dependencies:
 ```bash
 git clone https://github.com/A-Memory/Helpdesk_AI_ChatBot.git
 cd Helpdesk_AI_ChatBot-main/
-poetry install
+poetry install (or python3 -m poetry install)
 ```
 
 > 💡 By default, Poetry creates a virtual environment outside your project folder.
