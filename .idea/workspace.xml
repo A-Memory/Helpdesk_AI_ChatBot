@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5557277b-f79a-4ad8-90e5-ac4b07ef4b7c" name="Changes" comment="Creation of unrelease branch">
+    <list default="true" id="5557277b-f79a-4ad8-90e5-ac4b07ef4b7c" name="Changes" comment="change 'lm_listener' and fix 'model_response' double input that affects the chat context and overwrites the 'model_response_text' value on the screen.">
+      <change afterPath="$PROJECT_DIR$/run_app" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk_app.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk_app.py" afterDir="false" />
     </list>
@@ -59,6 +60,8 @@
     "Python.m.executor": "Run",
     "Python.menu.executor": "Debug",
     "Python.other_menu.executor": "Run",
+    "Python.run_app.executor": "Run",
+    "Python.t.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "unrelease",
@@ -148,12 +151,21 @@
       <option name="project" value="LOCAL" />
       <updated>1747783422019</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="change 'lm_listener' and fix 'model_response' double input that affects the chat context and overwrites the 'model_response_text' value on the screen.">
+      <option name="closed" value="true" />
+      <created>1747841845105</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1747841845105</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Creation of unrelease branch" />
-    <option name="LAST_COMMIT_MESSAGE" value="Creation of unrelease branch" />
+    <MESSAGE value="change 'lm_listener' and fix 'model_response' double input that affects the chat context and overwrites the 'model_response_text' value on the screen." />
+    <option name="LAST_COMMIT_MESSAGE" value="change 'lm_listener' and fix 'model_response' double input that affects the chat context and overwrites the 'model_response_text' value on the screen." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

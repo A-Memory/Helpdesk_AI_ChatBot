@@ -1,11 +1,8 @@
-import os
-import random
-import subprocess
+import socket
 import threading
 import time
 import flet as ft
 import lmstudio as lm
-import socket
 
 # LM Studio Server setup
 IS_LM_RUNNING: bool = False
@@ -28,6 +25,8 @@ except lm.LMStudioWebsocketError:
 
 # end of LM Studio Server Setup
 
+def m2(page: ft.Page):
+    page.add(ft.TextField(label="test"))
 # Main Flet Loop and Setup
 def main(page: ft.Page):
     # important globals
@@ -136,16 +135,6 @@ def main(page: ft.Page):
 
     # Moin Window Bar
     page.appbar = ft.CupertinoAppBar(
-        # how to use app menu
-        leading=ft.Container(
-            content=ft.Icon(
-                name=ft.Icons.BOOK,
-                tooltip="! ! ! ! IMPORTANT ! ! ! !\n"
-                        "⚠️ Please send only one message at a time.\n"
-                        "Multiple messages are placed in a queue, which can use extra resources "
-                        "and may lead to performance issues or unexpected crashes.\n"
-            )
-        ),
         # menu option area
         trailing=ft.MenuBar(
             controls=[
